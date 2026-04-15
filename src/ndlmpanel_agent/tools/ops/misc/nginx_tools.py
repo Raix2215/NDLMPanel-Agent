@@ -5,8 +5,8 @@ from ndlmpanel_agent.exceptions import (
     ServiceUnavailableException,
     ToolExecutionException,
 )
-from ndlmpanel_agent.models.nginx_models import NginxInstallInfo, NginxStatus
-from ndlmpanel_agent.tools._command_runner import runCommand
+from ndlmpanel_agent.models.ops.misc.nginx_models import NginxInstallInfo, NginxStatus
+from ndlmpanel_agent.tools.ops._command_runner import runCommand
 
 
 def checkNginxInstalled() -> NginxInstallInfo:

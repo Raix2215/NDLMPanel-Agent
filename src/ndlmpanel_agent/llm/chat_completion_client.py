@@ -4,15 +4,13 @@ LLM Chat Completion 客户端
 封装 openai SDK，提供统一的大模型调用接口。
 """
 
-import json
 from openai import AsyncOpenAI
 from openai.types.chat import (
-    ChatCompletionMessage,
     ChatCompletionToolParam,
 )
 
 from ndlmpanel_agent.config import LLMConfiguration
-
+from ndlmpanel_agent.models.agent.chat_models import LLMCompletionResult, ToolCallRequest
 
 class ChatCompletionClient:
     """
@@ -35,7 +33,7 @@ class ChatCompletionClient:
         self,
         messages: list[dict],
         tools: list[ChatCompletionToolParam] | None = None,
-    ) -> ChatCompletionMessage:
+    ) -> LLMCompletionResult:
         """
         发送对话消息给 LLM，返回 AI 的回复
 
@@ -45,7 +43,7 @@ class ChatCompletionClient:
             tools:    可用工具的定义列表，可选
 
         Returns:
-            ChatCompletionMessage，包含 content 和/或 tool_calls
+            LLMCompletionResult，包含 content 和/或 tool_calls
         """
 
         # 构建请求参数
@@ -64,4 +62,23 @@ class ChatCompletionClient:
 
         response = await self._client.chat.completions.create(**request_kwargs)
 
-        return response.choices[0].message
+        response_packed = LLMCompletionResult(
+            content=response.choices[0].message.content,
+            toolCalls=[
+                ToolCallRequest(
+                    id=call.id,
+                    functionName=call.function.name,
+                    arguments=call.function.arguments,  # 保持字符串，不要 json.loads
+                )
+                for call in (response.choices[0].message.tool_calls or [])
+            ]
+            or None,
+            finishReason=response.choices[0].finish_reason,
+            refusal=response.choices[0].message.refusal,
+            totalTokensUsed=response.usage.total_tokens if response.usage else None,
+            model=response.model,
+            reasoningContent=getattr(response.choices[0].message, "reasoning_content", None),
+        )
+
+
+        return response_packed

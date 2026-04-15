@@ -4,7 +4,7 @@ from datetime import datetime
 
 import psutil
 
-from ndlmpanel_agent.models.system_info_models import SystemVersion, UptimeInfo
+from ndlmpanel_agent.models.ops.misc.system_info_models import SystemVersion, UptimeInfo
 
 
 def getSystemVersion() -> SystemVersion:

@@ -5,8 +5,8 @@ from ndlmpanel_agent.exceptions import (
     ServiceUnavailableException,
     ToolExecutionException,
 )
-from ndlmpanel_agent.models.docker_models import DockerContainer, DockerInstallInfo
-from ndlmpanel_agent.tools._command_runner import runCommand
+from ndlmpanel_agent.models.ops.misc.docker_models import DockerContainer, DockerInstallInfo
+from ndlmpanel_agent.tools.ops._command_runner import runCommand
 
 
 def checkDockerInstalled() -> DockerInstallInfo:

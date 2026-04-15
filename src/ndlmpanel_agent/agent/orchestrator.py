@@ -1,5 +1,5 @@
 from ndlmpanel_agent.config import AgentConfiguration
-from ndlmpanel_agent.models.chat_models import AgentResponse
+from ndlmpanel_agent.models.agent.chat_models import AgentResponse
 
 
 class AgentOrchestrator:

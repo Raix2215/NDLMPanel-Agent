@@ -1,8 +1,8 @@
 import re
 
 from ndlmpanel_agent.exceptions import ToolExecutionException
-from ndlmpanel_agent.models.database_models import DatabaseInstallInfo, DatabaseStatus
-from ndlmpanel_agent.tools._command_runner import runCommand
+from ndlmpanel_agent.models.ops.misc.database_models import DatabaseInstallInfo, DatabaseStatus
+from ndlmpanel_agent.tools.ops._command_runner import runCommand
 
 # 数据库类型 → 版本检测命令
 _VERSION_COMMANDS: dict[str, list[str]] = {

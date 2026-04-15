@@ -6,7 +6,7 @@ from ndlmpanel_agent.exceptions import (
     PermissionDeniedException,
     ResourceNotFoundException,
 )
-from ndlmpanel_agent.models.process_models import (
+from ndlmpanel_agent.models.ops.process.process_models import (
     ProcessInfo,
     ProcessKillResult,
     ProcessSortBy,

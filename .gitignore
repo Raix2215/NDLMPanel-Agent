@@ -9,5 +9,10 @@ wheels/
 # Virtual environments
 .venv
 
+# Docs and Logs
+docs/
+logs/
+
 # Local Environment variables
 .env
+.alma-snapshots

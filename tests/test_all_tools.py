@@ -262,7 +262,7 @@ def testFilesystem():
 
 def testProcess():
     from ndlmpanel_agent.tools import killProcess, listProcesses
-    from ndlmpanel_agent.models.process_models import ProcessSortBy
+    from ndlmpanel_agent.models.ops.process.process_models import ProcessSortBy
 
     # 按 CPU 排序
     procs = _run(
@@ -630,7 +630,7 @@ def testDatabase():
 
 
 def testService():
-    from ndlmpanel_agent.models.service_models import ServiceAction
+    from ndlmpanel_agent.models.ops.service.service_models import ServiceAction
     from ndlmpanel_agent.tools import manageSystemService
 
     # 只测试 status，不做 start/stop 避免影响系统

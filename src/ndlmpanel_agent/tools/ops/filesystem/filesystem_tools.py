@@ -16,7 +16,7 @@ from ndlmpanel_agent.exceptions import (
     ResourceNotFoundException,
     ToolExecutionException,
 )
-from ndlmpanel_agent.models.filesystem_models import (
+from ndlmpanel_agent.models.ops.filesystem.filesystem_models import (
     FileInfo,
     FileOperationResult,
     FileType,

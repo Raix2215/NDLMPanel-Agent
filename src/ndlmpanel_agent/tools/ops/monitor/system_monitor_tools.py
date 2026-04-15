@@ -10,14 +10,14 @@ import time
 import psutil
 
 from ndlmpanel_agent.exceptions import ToolExecutionException
-from ndlmpanel_agent.models.system_monitor_models import (
+from ndlmpanel_agent.models.ops.monitor.system_monitor_models import (
     CpuInfo,
     DiskPartitionInfo,
     GpuInfo,
     MemoryInfo,
     NetworkInterfaceInfo,
 )
-from ndlmpanel_agent.tools._command_runner import runCommand
+from ndlmpanel_agent.tools.ops._command_runner import runCommand
 
 
 def getCpuInfo() -> CpuInfo:

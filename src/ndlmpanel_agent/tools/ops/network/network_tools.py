@@ -3,8 +3,8 @@ import socket
 import time
 
 from ndlmpanel_agent.exceptions import ToolExecutionException
-from ndlmpanel_agent.models.network_models import PingResult, PortCheckResult
-from ndlmpanel_agent.tools._command_runner import runCommand
+from ndlmpanel_agent.models.ops.network.network_models import PingResult, PortCheckResult
+from ndlmpanel_agent.tools.ops._command_runner import runCommand
 
 
 def pingHost(host: str, timeout: int = 5) -> PingResult:

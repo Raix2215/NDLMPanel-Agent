@@ -14,7 +14,7 @@ from ndlmpanel_agent.config import (
     LLMConfiguration,
     SafetyConfiguration,
 )
-from ndlmpanel_agent.models.chat_models import AgentResponse, ChatMessage
+from ndlmpanel_agent.models.agent.chat_models import AgentResponse, ChatMessage
 from ndlmpanel_agent.agent.orchestrator import AgentOrchestrator
 
 __all__ = [
