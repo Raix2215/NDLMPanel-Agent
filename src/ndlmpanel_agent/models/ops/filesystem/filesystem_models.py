@@ -18,6 +18,10 @@ class FileInfo(BaseModel):
     permissions: str
     modifiedTime: datetime
     absolutePath: str
+    createdTime: datetime | None = None
+    owner: str | None = None
+    group: str | None = None
+
 
 
 class FileOperationResult(BaseModel):
@@ -36,4 +40,21 @@ class OwnerChangeResult(BaseModel):
     success: bool
     newOwner: str | None = None
     newGroup: str | None = None
+    errorMessage: str | None = None
+
+
+class GrepMatch(BaseModel):
+    """Grep匹配结果的单条记录"""
+    fileInfo: FileInfo
+    lineNumber: int
+    lineContent: str
+
+
+class GrepResult(BaseModel):
+    """Grep搜索结果的总体包装类"""
+    success: bool
+    pattern: str
+    targetPath: str
+    matches: list[GrepMatch]
+    totalMatches: int
     errorMessage: str | None = None
