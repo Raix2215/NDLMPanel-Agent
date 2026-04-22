@@ -210,11 +210,11 @@ class ToolRegistry:
         self._tools_schema_cache: list[dict] | None = None
 
         for fn in tool_functions:
-            self._register(fn)
+            self._registerFn(fn)
 
     # ── 注册阶段（构造时自动调用）────────────────────────────────────────
 
-    def _register(self, fn: Callable) -> None:
+    def _registerFn(self, fn: Callable) -> None:
         """解析单个函数的元信息，存入 _registry 和 _definitions。"""
         name = fn.__name__
         self._registry[name] = fn
@@ -226,7 +226,7 @@ class ToolRegistry:
         risk_level = RISK_LEVEL_MAP.get(name, ToolRiskLevel.WRITE)
 
         # 解析函数签名生成 JSON Schema（parameters 字段）
-        parameters_schema = self._build_parameters_schema(fn)
+        parameters_schema = self._buildParametersSchema(fn)
 
         self._definitions[name] = ToolDefinition(
             name=name,
@@ -235,7 +235,7 @@ class ToolRegistry:
             parameters_schema=parameters_schema,
         )
 
-    def _build_parameters_schema(self, fn: Callable) -> dict:
+    def _buildParametersSchema(self, fn: Callable) -> dict:
         """
         把函数签名转换为 OpenAI function calling 所需的 parameters 字段格式。
 
@@ -282,7 +282,7 @@ class ToolRegistry:
 
     # ── 对外接口 ─────────────────────────────────────────────────────────
 
-    def get_tools_schema(self) -> list[dict]:
+    def getToolsSchema(self) -> list[dict]:
         """
         返回 OpenAI API 的 tools 参数格式列表。
         在 AgentOrchestrator 每次调用 LLM 时传入。
@@ -320,7 +320,7 @@ class ToolRegistry:
             ]
         return self._tools_schema_cache
 
-    def get_definition(self, name: str) -> ToolDefinition | None:
+    def getDefinition(self, name: str) -> ToolDefinition | None:
         """
         按函数名获取工具元信息（含风险等级）。
         主要供 SafetyGuard 使用。
@@ -332,8 +332,8 @@ class ToolRegistry:
 
     async def execute(
         self,
-        tool_name: str,
-        arguments_json: str,
+        toolName: str,
+        argumentsJson: str,
     ) -> ToolExecutionResult:
         """
         根据 LLM 返回的函数名和参数（JSON 字符串），找到函数并执行。
@@ -342,41 +342,37 @@ class ToolRegistry:
         调用，避免阻塞 asyncio 事件循环（重要：getCpuInfo 等有 time.sleep）。
 
         Args:
-            tool_name:       LLM 返回的 function name（如 "killProcess"）
-            arguments_json:  LLM 返回的 arguments 字段（JSON 字符串）
+            toolName:       LLM 返回的 function name（如 "killProcess"）
+            argumentsJson:  LLM 返回的 arguments 字段（JSON 字符串）
 
         Returns:
             ToolExecutionResult，包含执行状态和输出字符串
         """
         # ── 查找函数 ──────────────────────────────────────────────────────
-        fn = self._registry.get(tool_name)
+        fn = self._registry.get(toolName)
         if fn is None:
             return ToolExecutionResult(
-                tool_name=tool_name,
+                tool_name=toolName,
                 success=False,
                 output="",
-                error_message=f"未知工具: '{tool_name}'，该函数未在 ToolRegistry 中注册",
+                error_message=f"未知工具: '{toolName}'，该函数未在 ToolRegistry 中注册",
             )
 
         # ── 解析参数 ──────────────────────────────────────────────────────
         try:
-            # arguments_json 可能是空字符串（无参数函数）
-            kwargs: dict = json.loads(arguments_json) if arguments_json.strip() else {}
+            kwargs: dict = json.loads(argumentsJson) if argumentsJson.strip() else {}
         except json.JSONDecodeError as e:
             return ToolExecutionResult(
-                tool_name=tool_name,
+                tool_name=toolName,
                 success=False,
                 output="",
-                error_message=f"参数 JSON 解析失败: {e}，原始参数: {arguments_json!r}",
+                error_message=f"参数 JSON 解析失败: {e}，原始参数: {argumentsJson!r}",
             )
 
         # ── 枚举参数反序列化 ──────────────────────────────────────────────
-        # LLM 传来的枚举值是字符串（如 "cpu"），需要还原成枚举对象
-        kwargs = self._coerce_enum_args(fn, kwargs)
+        kwargs = self._coerceEnumArgs(fn, kwargs)
 
         # ── 在线程池中执行同步函数 ─────────────────────────────────────────
-        # run_in_executor(None, ...) 使用默认线程池（ThreadPoolExecutor）
-        # functools.partial 把 kwargs 绑到函数上，因为 executor 只接受位置参数
         import functools
 
         loop = asyncio.get_event_loop()
@@ -386,10 +382,8 @@ class ToolRegistry:
                 functools.partial(fn, **kwargs),
             )
         except Exception as e:
-            # 工具函数内部抛出的所有异常（包括自定义的 GatewayAbstractException）
-            # 统一捕获并转为 ToolExecutionResult，不让异常传播到 AgentOrchestrator
             return ToolExecutionResult(
-                tool_name=tool_name,
+                tool_name=toolName,
                 success=False,
                 output="",
                 error_message=f"{type(e).__name__}: {e}",
@@ -397,14 +391,14 @@ class ToolRegistry:
 
         # ── 序列化结果 ────────────────────────────────────────────────────
         return ToolExecutionResult(
-            tool_name=tool_name,
+            tool_name=toolName,
             success=True,
             output=_serialize_result(result),
         )
 
     # ── 内部辅助 ─────────────────────────────────────────────────────────
 
-    def _coerce_enum_args(self, fn: Callable, kwargs: dict) -> dict:
+    def _coerceEnumArgs(self, fn: Callable, kwargs: dict) -> dict:
         """
         把 LLM 传来的字符串枚举值还原为 Python 枚举对象。
 
@@ -439,7 +433,7 @@ class ToolRegistry:
 
         return coerced
 
-    def registered_tool_names(self) -> list[str]:
+    def registeredToolNames(self) -> list[str]:
         """返回所有已注册的工具名，用于调试或展示。"""
         return list(self._registry.keys())
 

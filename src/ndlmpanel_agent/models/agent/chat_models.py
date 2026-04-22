@@ -16,17 +16,17 @@ class ChatMessage(BaseModel):
     role: MessageRole
     content: str
     timestamp: datetime
-    tool_call_id: str | None = None  # 工具调用结果关联用
+    toolCallId: str | None = None
 
 
 class AgentResponse(BaseModel):
     """Agent 返回给后端的完整响应"""
 
-    reply: str  # 最终文本回复
-    tool_calls_made: list[str] = []  # 本轮调用了哪些工具
-    risk_level: str = "low"  # 本轮风险等级
-    requires_human_confirm: bool = False  # 是否需要人工确认
-    pending_action: dict | None = None  # 待确认的操作详情
+    reply: str
+    toolCallsMade: list[str] = []
+    riskLevel: str = "low"
+    requiresHumanConfirm: bool = False
+    pendingAction: dict | None = None
 
 class ToolCallRequest(BaseModel):
     """单个工具调用请求，从 LLM 响应中提取"""
