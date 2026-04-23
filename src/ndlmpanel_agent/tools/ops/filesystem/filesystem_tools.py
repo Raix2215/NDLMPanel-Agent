@@ -184,24 +184,18 @@ def _grepFileNames(
     
     # 添加选项
     if recursive:
-        # find 默认递归
         pass
     else:
-        # 只搜索一层
         findCmd.append("-maxdepth")
         findCmd.append("1")
-    
-    # 添加文件类型
-    findCmd.extend(["-type", "f"])
-    
-    # 使用 regex 进行正则表达式匹配
+
     if ignoreCase:
         findCmd.append("-iregex")
     else:
         findCmd.append("-regex")
     
     # find 的正则匹配是全路径匹配，需要加上通配符前缀
-    findCmd.append(f".*{regExpr}")
+    findCmd.append(f".*{regExpr}.*")
     
     # 执行 find 命令（不检查返回码，因为find找不到匹配时返回1）
     result = runCommand(findCmd, timeout=timeout, checkReturnCode=False)
