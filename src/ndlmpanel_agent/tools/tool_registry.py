@@ -47,6 +47,8 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "listSingleFileOrDirectory": ToolRiskLevel.READ_ONLY,
     "grepFileOrDirectory": ToolRiskLevel.READ_ONLY,
     "listProcesses": ToolRiskLevel.READ_ONLY,
+    "getProcessDetail": ToolRiskLevel.READ_ONLY,
+    "getZombieOrphanProcesses": ToolRiskLevel.READ_ONLY,
     "querySystemLogs": ToolRiskLevel.READ_ONLY,
     "listUsers": ToolRiskLevel.READ_ONLY,
     "getLoginHistory": ToolRiskLevel.READ_ONLY,
@@ -61,6 +63,9 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "getNginxStatus": ToolRiskLevel.READ_ONLY,
     "checkDatabaseInstalled": ToolRiskLevel.READ_ONLY,
     "getDatabaseStatus": ToolRiskLevel.READ_ONLY,
+    "getDirectoryTree": ToolRiskLevel.READ_ONLY,
+    "isTextFile": ToolRiskLevel.READ_ONLY,
+    "readTextFile": ToolRiskLevel.READ_ONLY,
     # ── Layer 2: 受控操作（WRITE）──────────────────────────────────────────
     # 有副作用但相对可逆，SafetyGuard 可放行但记录日志
     "createFile": ToolRiskLevel.WRITE,
@@ -68,6 +73,10 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "renameFileOrDirectory": ToolRiskLevel.WRITE,
     "changePermissions": ToolRiskLevel.WRITE,
     "changeOwner": ToolRiskLevel.WRITE,
+    "copyFile": ToolRiskLevel.WRITE,
+    "compressPath": ToolRiskLevel.WRITE,
+    "decompressArchive": ToolRiskLevel.WRITE,
+    "writeTextFile": ToolRiskLevel.WRITE,
     # ── Layer 3: 高危操作（DANGEROUS）─────────────────────────────────────
     # 不可逆或影响系统安全，SafetyGuard 会要求人工确认
     "killProcess": ToolRiskLevel.DANGEROUS,
@@ -76,6 +85,8 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "addFirewallPort": ToolRiskLevel.DANGEROUS,
     "removeFirewallPort": ToolRiskLevel.DANGEROUS,
     "manageSystemService": ToolRiskLevel.DANGEROUS,
+    "autoCleanProcesses": ToolRiskLevel.DANGEROUS,
+    "batchKillProcesses": ToolRiskLevel.DANGEROUS,
 }
 
 
