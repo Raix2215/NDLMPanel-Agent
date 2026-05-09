@@ -61,6 +61,9 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "getDockerContainers": ToolRiskLevel.READ_ONLY,
     "checkNginxInstalled": ToolRiskLevel.READ_ONLY,
     "getNginxStatus": ToolRiskLevel.READ_ONLY,
+    "generateStaticSiteConfig": ToolRiskLevel.READ_ONLY,
+    "generateProxyConfig": ToolRiskLevel.READ_ONLY,
+    "testNginxConfig": ToolRiskLevel.READ_ONLY,
     "checkDatabaseInstalled": ToolRiskLevel.READ_ONLY,
     "getDatabaseStatus": ToolRiskLevel.READ_ONLY,
     "getDirectoryTree": ToolRiskLevel.READ_ONLY,
@@ -79,6 +82,9 @@ RISK_LEVEL_MAP: dict[str, ToolRiskLevel] = {
     "writeTextFile": ToolRiskLevel.WRITE,
     # ── Layer 3: 高危操作（DANGEROUS）─────────────────────────────────────
     # 不可逆或影响系统安全，SafetyGuard 会要求人工确认
+    "saveNginxConfig": ToolRiskLevel.DANGEROUS,
+    "reloadNginx": ToolRiskLevel.DANGEROUS,
+    "createNginxSite": ToolRiskLevel.DANGEROUS,
     "killProcess": ToolRiskLevel.DANGEROUS,
     "deleteFile": ToolRiskLevel.DANGEROUS,
     "deleteDirectory": ToolRiskLevel.DANGEROUS,
